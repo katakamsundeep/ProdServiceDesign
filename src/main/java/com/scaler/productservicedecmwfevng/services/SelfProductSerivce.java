@@ -1,6 +1,7 @@
 package com.scaler.productservicedecmwfevng.services;
 
 import com.scaler.productservicedecmwfevng.exception.ProductNotExistsException;
+import com.scaler.productservicedecmwfevng.models.Category;
 import com.scaler.productservicedecmwfevng.models.Product;
 import com.scaler.productservicedecmwfevng.repositories.CategoryRepository;
 import com.scaler.productservicedecmwfevng.repositories.ProductRepository;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("selfProductService")
 public class SelfProductSerivce implements ProductService{
@@ -34,7 +36,16 @@ public class SelfProductSerivce implements ProductService{
 
     @Override
     public Product addNewProduct(Product product) {
-        return null;
+
+        Optional<Category> categoryOptional=categoryRepository.findById(product.getCategory().getId());
+
+        if(categoryOptional.isEmpty()){
+           product.setCategory(categoryRepository.save(product.getCategory()));
+        }else{
+            product.setCategory(categoryOptional.get());
+        }
+
+        return productRepository.save(product);
     }
 
     @Override

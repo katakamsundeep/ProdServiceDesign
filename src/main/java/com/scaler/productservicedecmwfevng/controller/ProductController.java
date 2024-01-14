@@ -44,7 +44,7 @@ public class ProductController {
 //
 //        p.setTitle("A new Product");
 
-        return new Product();
+        return productService.addNewProduct(product);
     }
 
     @PatchMapping("/{id}")
