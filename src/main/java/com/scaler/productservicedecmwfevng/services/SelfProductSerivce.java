@@ -26,6 +26,8 @@ public class SelfProductSerivce implements ProductService{
     }
     @Override
     public Product getSingleProduct(Long id) throws ProductNotExistsException {
+
+        
         return null;
     }
 
@@ -37,10 +39,20 @@ public class SelfProductSerivce implements ProductService{
     @Override
     public Product addNewProduct(Product product) {
 
-        Optional<Category> categoryOptional=categoryRepository.findById(product.getCategory().getId());
+        //created by using findbyid from categoryrepo
+       /* Optional<Category> categoryOptional=categoryRepository.findById(product.getCategory().getId());
 
         if(categoryOptional.isEmpty()){
            product.setCategory(categoryRepository.save(product.getCategory()));
+        }else{
+            product.setCategory(categoryOptional.get());
+        }*/
+
+        //crated by using findbyname from categoryrepo
+        Optional<Category> categoryOptional= categoryRepository.findByName(product.getCategory().getName());
+
+        if(categoryOptional.isEmpty()){
+            product.setCategory(categoryRepository.save(product.getCategory()));
         }else{
             product.setCategory(categoryOptional.get());
         }
