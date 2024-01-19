@@ -10,13 +10,13 @@ public interface ProductService {
     Product getSingleProduct(Long id) throws ProductNotExistsException;
 
 
-    List<Product> getAllProducts();
+    List<Product> getAllProducts() ;
 
     Product addNewProduct(Product product);
 
     Product replaceProduct(Long id, Product product);
 
-    Product deleteProduct(Long id) throws ProductNotExistsException;
+    void deleteProduct(Long id) throws ProductNotExistsException;
 
     Product updateProduct (Long id, Product product);
 }

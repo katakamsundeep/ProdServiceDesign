@@ -5,9 +5,9 @@ import com.scaler.productservicedecmwfevng.models.Category;
 import com.scaler.productservicedecmwfevng.models.Product;
 import com.scaler.productservicedecmwfevng.repositories.CategoryRepository;
 import com.scaler.productservicedecmwfevng.repositories.ProductRepository;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,13 +27,33 @@ public class SelfProductSerivce implements ProductService{
     @Override
     public Product getSingleProduct(Long id) throws ProductNotExistsException {
 
-        
-        return null;
+        Optional<Product> productOptional = productRepository.findById(id);
+
+        if(productOptional.isEmpty()){
+            throw new ProductNotExistsException("Product id with "+id +" doesnt exist");
+        }
+
+            Product product = productOptional.get();
+
+
+        return product;
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return null;
+    public List<Product> getAllProducts()  {
+
+        List<Product> productList = new ArrayList<>();
+
+        productList = productRepository.findAll();
+
+        if(!productList.isEmpty()) {
+
+            return productList;
+        }
+        for (Product product : productList) {
+            productList.add(product);
+        }
+        return productList;
     }
 
     @Override
@@ -62,16 +82,74 @@ public class SelfProductSerivce implements ProductService{
 
     @Override
     public Product replaceProduct(Long id, Product product) {
-        return null;
+
+        Optional<Product> productOptional = productRepository.findById(id);
+
+        if(productOptional.isEmpty()) throw new RuntimeException();
+
+        Product updateProduct = productOptional.get();
+
+
+        if(product.getTitle() != null){
+            updateProduct.setTitle(product.getTitle());
+        }
+        if(product.getPrice() != null){
+            updateProduct.setPrice(product.getPrice());
+        }
+        if(product.getDescription() != null){
+            updateProduct.setDescription(product.getDescription());
+        }
+        if(product.getImageUrl() != null){
+            updateProduct.setImageUrl(product.getImageUrl());
+        }
+
+//        Optional<Category> categoryOptional= categoryRepository.findById(id);
+//
+//        if(categoryOptional.isEmpty()){
+//            throw new RuntimeException();
+//        }
+        updateProduct.setCategory(categoryRepository.save(product.getCategory()));
+
+
+
+
+        return productRepository.save(updateProduct);
+
     }
 
     @Override
-    public Product deleteProduct(Long id) throws ProductNotExistsException {
-        return null;
+    public void deleteProduct(Long id) throws ProductNotExistsException {
+        Optional<Product> productOptional = productRepository.findById(id);
+
+        if(productOptional.isEmpty()) throw new RuntimeException();
+
+        productRepository.deleteById(id);
+
     }
 
     @Override
     public Product updateProduct(Long id, Product product) {
-        return null;
+
+        Optional<Product> productOptional = productRepository.findById(id);
+
+
+        if(productOptional.isEmpty()) throw new RuntimeException();
+
+        Product updateProduct = productOptional.get();
+
+        if(product.getTitle() != null){
+            updateProduct.setTitle(product.getTitle());
+        }
+        if(product.getPrice() != null){
+            updateProduct.setPrice(product.getPrice());
+        }
+        if(product.getDescription() != null){
+            updateProduct.setDescription(product.getDescription());
+        }
+        if(product.getImageUrl() != null){
+            updateProduct.setImageUrl(product.getImageUrl());
+        }
+
+        return productRepository.save(updateProduct);
     }
 }

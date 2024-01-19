@@ -50,17 +50,18 @@ public class ProductController {
     @PatchMapping("/{id}")
     public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
 
-        return new Product();
+        return productService.updateProduct(id,product);
     }
 
     @PutMapping("/{id}")
     public Product replaceProductDetails(@PathVariable("id") Long id, @RequestBody Product product){
 
-        return new Product();
+        return productService.replaceProduct(id,product );
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable("id") Long id){
+    public void deleteProduct(@PathVariable("id") Long id) throws ProductNotExistsException {
 
+         productService.deleteProduct(id);
     }
 }

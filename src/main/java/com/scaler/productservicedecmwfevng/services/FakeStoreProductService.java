@@ -100,7 +100,7 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public Product deleteProduct(Long id) throws ProductNotExistsException {
+    public void deleteProduct(Long id) throws ProductNotExistsException {
         FakeStoreProductDto productDto = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + id,
                 FakeStoreProductDto.class);
@@ -108,8 +108,7 @@ public class FakeStoreProductService implements ProductService {
         if (productDto==null){
             throw new ProductNotExistsException( "Product with id: " + id + " doesn't exist.");
         }
-
-        return convertFakeStoreProductToProduct(productDto);
+        convertFakeStoreProductToProduct(productDto);
     }
 
     @Override
