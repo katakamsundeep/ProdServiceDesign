@@ -1,5 +1,8 @@
 package com.scaler.productservicedecmwfevng.controller;
 
+import com.scaler.productservicedecmwfevng.commons.AuthenticationCommons;
+import com.scaler.productservicedecmwfevng.dtos.Role;
+import com.scaler.productservicedecmwfevng.dtos.UserDto;
 import com.scaler.productservicedecmwfevng.exception.ProductNotExistsException;
 import com.scaler.productservicedecmwfevng.models.Product;
 import com.scaler.productservicedecmwfevng.services.ProductService;
@@ -18,16 +21,58 @@ public class ProductController {
 
     private ProductService productService;
 
+    private AuthenticationCommons authenticationCommons;
+
     @Autowired
-    public ProductController(@Qualifier("selfProductService") ProductService productService){
+    public ProductController(@Qualifier("selfProductService") ProductService productService,
+                                AuthenticationCommons authenticationCommons){
 
         this.productService=productService;
+        this.authenticationCommons = authenticationCommons;
     }
 
     @GetMapping()   // localhost:8080/products
-    public List<Product> getAllProducts(){
+    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader String token){
 
-        return productService.getAllProducts();
+        UserDto userDto = authenticationCommons.validateToken(token);
+       if( userDto == null){
+
+           return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
+       }
+
+       boolean isAdmin = false;
+
+       for(Role role : userDto.getRoles()){
+           if(role.getName().equals("Admin")){
+               isAdmin = true;
+               break;
+           }
+       }
+
+       if(!isAdmin){
+           return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+       }
+        List<Product> productList = productService.getAllProducts();
+
+//        JUNIT TeST Purpose
+//        List<Product> junitProcutlist = new ArrayList<>();
+//
+//        for(int i=0; i<2; i++){
+//            junitProcutlist.add(productList.get(i));
+//        }
+
+
+//        for(Product p: productList){
+//            p.setTitle("Hello " + p.getTitle());
+//            junitProcutlist.add(p);
+//        }
+
+
+        ResponseEntity<List<Product>> response = new ResponseEntity<>(productList, HttpStatus.FORBIDDEN);
+
+
+
+        return response;
     }
 
 

@@ -5,12 +5,14 @@ import com.scaler.productservicedecmwfevng.models.Category;
 import com.scaler.productservicedecmwfevng.models.Product;
 import com.scaler.productservicedecmwfevng.repositories.CategoryRepository;
 import com.scaler.productservicedecmwfevng.repositories.ProductRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Primary
 @Service("selfProductService")
 public class SelfProductSerivce implements ProductService{
 
@@ -69,10 +71,18 @@ public class SelfProductSerivce implements ProductService{
         }*/
 
         //crated by using findbyname from categoryrepo
-        Optional<Category> categoryOptional= categoryRepository.findByName(product.getCategory().getName());
+       /* Optional<Category> categoryOptional= categoryRepository.findByName(product.getCategory().getName());
 
         if(categoryOptional.isEmpty()){
             product.setCategory(categoryRepository.save(product.getCategory()));
+        }else{
+            product.setCategory(categoryOptional.get());
+        }*/
+
+        //create  by cascade.persist from product class
+        Optional<Category> categoryOptional= categoryRepository.findByName(product.getCategory().getName());
+        if(categoryOptional.isEmpty()){
+
         }else{
             product.setCategory(categoryOptional.get());
         }
